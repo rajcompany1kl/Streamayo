@@ -9,6 +9,7 @@ import {
   } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation';
 import { usePathname } from "next/navigation";
+import Searchbar from './Searchbar';
 
 const Header = () => {
     const pathname = usePathname();
@@ -24,7 +25,7 @@ const Header = () => {
     <span className="text-gray-800">StreaMeyo</span>
   </h1>
 </div>
- 
+<Searchbar />
             <SignedOut>
                 <SignInButton>Login</SignInButton>
                 <SignUpButton>

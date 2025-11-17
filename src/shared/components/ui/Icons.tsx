@@ -103,9 +103,9 @@ export const LoadingIcon: React.FC<IconType> = (props) => {
         r="20"
         fill="none"
         stroke="currentColor"
-        stroke-width="4"
-        stroke-linecap="round"
-        stroke-dasharray="31.4 125.6"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeDasharray="31.4 125.6"
       />
     </g>
   </svg>

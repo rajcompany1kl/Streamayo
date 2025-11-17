@@ -14,7 +14,7 @@ export default function WatchLiveTemplate(roomIdProp?: { roomId: string }) {
 
   // ✅ Create socket only once
   const [socket] = useState(() =>
-    io(NEXT_PUBLIC_BACKEND_URL, { transports: ['websocket'] })
+    io(`${NEXT_PUBLIC_BACKEND_URL}/live`, { transports: ['websocket'] })
   );
 /////////////// working here ///////////////////////
    useEffect(() => {
@@ -22,8 +22,8 @@ export default function WatchLiveTemplate(roomIdProp?: { roomId: string }) {
        try {
          const response = await request.home.getRoomMetadata(roomId);
   
-         console.log('[METADATA] room metadata:', response[0]);
-         setRoomMetadata(response[0]);
+         console.log('[METADATA] room metadata:', response);
+         setRoomMetadata(response);
        } catch (err) {
          console.error('[METADATA] error fetching room metadata:', err);
        } 

@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const LikedVideoCard: React.FC<{ video: Video }> = ({ video }) => {
-  const [onVertIcon, setOnVertIcon] = useState<boolean>(false);
+  
   const router = useRouter();
 
   const formatViews = (views: number) => {

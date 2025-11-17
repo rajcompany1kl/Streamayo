@@ -21,6 +21,9 @@ const nextConfig = {images: {
             },
         ];
     },
+    experimental: {
+      turbopackFileSystemCacheForDev:true,
+    }
 };
 
 export default nextConfig;
