@@ -29,9 +29,11 @@ export default function GoLiveTemplate() {
     description: description,
     thumbnailUrl: thumbnailUrl,
   };
+  ///////////////////////
   const [socket] = useState(() =>
-    io(NEXT_PUBLIC_BACKEND_URL, { transports: ['websocket'] }),
+    io(`${NEXT_PUBLIC_BACKEND_URL}/live`, { transports: ['websocket'] })
   );
+  
   const peerRef = useRef<Peer.Instance | null>(null);
 
 

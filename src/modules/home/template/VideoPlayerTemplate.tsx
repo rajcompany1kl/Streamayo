@@ -10,6 +10,7 @@ import CommentsSect from '../components/CommentsSect'
 
 
 const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
+  console.log("Video metadata in template:", metadata);
   const [ isSaved, setIsSaved] = useState<boolean>(false)
   const [ isSubscibed, setSubscribed] = useState<boolean>( false )
   const [likeStatus , setLikeStatus] = useState<'LIKED' | 'DISLIKED' | null>(null)
@@ -22,7 +23,7 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
       const response = await request.home.likeVideo(metadata.userId, metadata._id, user.id)
       getLikeStatus()
       console.log(response)
-      setLikesCount(response);
+      setLikesCount(response.likes ?? response.likesCount ?? response);
     } else {
       alert("You need to login first")
     } 
@@ -47,7 +48,7 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
       const response = await request.home.dislikeVideo(metadata.userId, metadata._id, user.id)
       getLikeStatus()
        console.log(response)
-      setLikesCount(response);
+      setLikesCount(response.likes ?? response.likesCount ?? response);
     } else {
       alert("You need to login first")
     }
@@ -56,7 +57,8 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
   const getLikeStatus = async() => {
     if(isSignedIn && user) {
       const response = await request.home.getLikeStatus(metadata._id, user.id)
-      if(response) {
+      console.log("Like status response",response)
+      if(response === true) {
         setLikeStatus('LIKED')
       } else if(response === false) {
         setLikeStatus('DISLIKED')
@@ -172,7 +174,7 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
         <strong className="text-md text-gray-700">Description</strong>
         <strong className="text-md text-gray-700">{likesCount} {likesCount === 1 ? 'like' : 'likes'}</strong>
         </div>
-        <p className="text-sm font-medium whitespace-pre-wrap">{metadata.description.trimStart()}</p>
+        <p className="text-sm font-medium whitespace-pre-wrap">{metadata.description}</p>
       </div>
     </div>
 

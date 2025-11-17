@@ -36,7 +36,7 @@ export default function MyVideosTemplate() {
 
     setIsUploading(true);
     try {
-      const { signature, timestamp, apiKey, cloudName } = (await axios.get(`${NEXT_PUBLIC_BACKEND_URL}/videos/upload-signature`)).data;
+      const { signature, timestamp, apiKey, cloudName } = await request.home.getUploadSignature();
 
       const formData = new FormData();
       formData.append("file", selectedFile);
@@ -44,6 +44,7 @@ export default function MyVideosTemplate() {
       formData.append("timestamp", timestamp);
       formData.append("signature", signature);
       formData.append("folder", "videos");
+      console.log("Form Data prepared for upload:", formData);
 
       const uploadRes = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
@@ -67,18 +68,19 @@ export default function MyVideosTemplate() {
 const secs = Math.floor(duration % 60);
 const formatDuration = `${mins}:${secs.toString().padStart(2, '0')}`;
 
+     const response = await request.home.uploadToBackend({
+         title: videoMetadata.title,
+         description: videoMetadata.description,
+         userId: user?.id ?? '',
+         url: secure_url,
+         publicId: public_id,
+         thumbnailUrl: secure_url.replace(/\.\w+$/, '.jpg'),
+         duration: formatDuration,
+         userName: user?.fullName ?? '',
+         userImageUrl: user.imageUrl
+       });
 
-      await axios.post(`${NEXT_PUBLIC_BACKEND_URL}/videos/cloud/upload`, {
-        title: videoMetadata.title,
-        description: videoMetadata.description,
-        userId: user?.id ?? '',
-        url: secure_url,
-        publicId: public_id,
-        thumbnailUrl: secure_url.replace(/\.\w+$/, '.jpg'),
-        duration: formatDuration
-      });
-
-      alert("Upload complete!");
+      alert(response);
       fetchVideos();
     } catch (err) {
       console.error(err);

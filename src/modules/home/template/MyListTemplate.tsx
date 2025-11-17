@@ -18,13 +18,9 @@ const MyListTemplate = () => {
       try {
         const response = await request.home.savedVideos(user.id);
 
-        const videosArray: Video[] = response.map((res: any) => ({
-          ...(res._doc as Video),
-          userName: res.userName,
-          userImageUrl: res.userImageUrl,
-        }));
+    
 
-        setVideos(videosArray);
+        setVideos(response);
       } catch (error) {
         console.error('Failed to fetch saved videos:', error);
       } finally {

@@ -1,11 +1,42 @@
 import useAxios from "@/shared/hooks/useAxios"
 import { get } from "http"
+//  axios.post(`${NEXT_PUBLIC_BACKEND_URL}/videos/cloud/upload`, {
+//         title: videoMetadata.title,
+//         description: videoMetadata.description,
+//         userId: user?.id ?? '',
+//         url: secure_url,
+//         publicId: public_id,
+//         thumbnailUrl: secure_url.replace(/\.\w+$/, '.jpg'),
+//         duration: formatDuration
+//       });
 
 
 const HomeServices = () => {
     const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
     const http = useAxios()
-    
+
+    async function getUploadSignature() {
+        try {
+            const response = await http.get(`${NEXT_PUBLIC_BACKEND_URL}/videos/upload-signature`)
+            if (response) {
+                return response.data
+            }
+        } catch (e) {
+            // Toasting here
+        }
+    }
+
+    async function uploadToBackend(videoData: { title: string; description: string; userId: string; url: string; publicId: string; thumbnailUrl: string; duration: string; userName: string; userImageUrl: string }) {
+        try {
+            const response = await http.post(`${NEXT_PUBLIC_BACKEND_URL}/videos/cloud/upload`, videoData)
+            if (response) {
+                return response.data
+            }
+        } catch (e) {
+            // Toasting here
+        }
+    }
+
     async function getUserDetails(id: string) {
         try{
             const response = await http.get(`${NEXT_PUBLIC_BACKEND_URL}/users/${id}`)
@@ -206,7 +237,18 @@ const HomeServices = () => {
         }
     }
 
-    return { getUserDetails, getAllVideos, uploadVideo, getMyVideos, likeVideo, getLikeStatus, dislikeVideo, getLikedVideos, getSaveStatus, saveVideo, getComments, addComment, savedVideos, subscribe, getSubscribedVideos, getLiveVideos, endLive, getRoomMetadata }
+    async function getLimitedVideos(skip: number, PAGE_SIZE: number) {
+        try{
+            const response = await http.get(`${NEXT_PUBLIC_BACKEND_URL}/videos/limited-videos?skip=${skip}&limit=${PAGE_SIZE}`);
+            if(response) {
+                return response.data
+            } else { return null }
+        } catch(e) {
+            // Toasting here
+        }
+    }
+
+    return { getUserDetails, getAllVideos, uploadVideo, getMyVideos, likeVideo, getLikeStatus, dislikeVideo, getLikedVideos, getSaveStatus, saveVideo, getComments, addComment, savedVideos, subscribe, getSubscribedVideos, getLiveVideos, endLive, getRoomMetadata, getUploadSignature, uploadToBackend, getLimitedVideos }
 }
 
   

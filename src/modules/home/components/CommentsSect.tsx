@@ -49,7 +49,7 @@ const CommentsSect = () => {
             placeholder="Add a comment..."
             value={inComment}
             onChange={(e) => setInComment(e.target.value)}
-            className="w-full bg-transparent text-gray-100 placeholder-gray-500 focus:outline-none text-sm"
+            className="w-full bg-transparent text-gray-800 placeholder-gray-500 focus:outline-none text-sm"
           />
           <button
             onClick={handleAddComment}

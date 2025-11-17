@@ -35,7 +35,7 @@ const MyVideosList: React.FC<{
         <div className="flex overflow-x-auto space-x-6 pb-4 -mx-4 px-4 no-scrollbar">
           {videos.map((video) => (
             <div key={video._id} className="w-72 md:w-80 shrink-0">
-              <VideoCard video={video} user={user} />
+              <VideoCard video={video}  />
             </div>
           ))}
         </div>
@@ -43,7 +43,7 @@ const MyVideosList: React.FC<{
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
           {videos.map((video) => {
              console.log("[VideoCard] rendering for:", user, video);
-           return <VideoCard key={video._id} video={video} user={user} />
+           return <VideoCard key={video._id} video={video}  />
           })}
         </div>
       )}

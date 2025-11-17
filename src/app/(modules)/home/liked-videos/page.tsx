@@ -1,9 +1,19 @@
 import LikedVideosTemplate from '@/modules/home/template/LikedVideosTemplate'
-import React from 'react'
+import {getLikedVideosServer} from '@/app/server/home'
+import { auth } from "@clerk/nextjs/server";
 
-const LikedVideosPage = () => {
+const LikedVideosPage = async () => {
+  
+   const { userId } = await auth();
+
+if(!userId) { return <LikedVideosTemplate videos={[]} />}
+
+  const videos = await getLikedVideosServer();
+ console.log("liked videos from server c",videos);
+
+
   return (
-    <LikedVideosTemplate />
+    <LikedVideosTemplate videos={videos} />
   )
 }
 
