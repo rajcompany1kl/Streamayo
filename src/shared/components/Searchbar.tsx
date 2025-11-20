@@ -1,92 +1,109 @@
-'use client'
-import React, { use, useEffect } from 'react'
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 const Searchbar = () => {
-    const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-    const [focused, setFocused] = React.useState(false);
-    const [searchTerm, setSearchTerm] = React.useState('');
-    const [probables, setProbables] = React.useState<any[]>([]);
-    const router = useRouter();
-    const searchRef = React.useRef<HTMLDivElement>(null);
-    
-    useEffect(() => {
-        console.log("Search Term:", searchTerm);
-       const delay = setTimeout(
-        () => {
-            if (searchTerm.length > 2) {
-                fetch(`${NEXT_PUBLIC_BACKEND_URL}/videos/search/${searchTerm}`)
-                .then(res => res.json())
-                .then(data => setProbables(data))
-            } else {
-                setProbables([]);
-            }
-        }, 500
-       );
-         return () => clearTimeout(delay);
+  const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const [focused, setFocused] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [probables, setProbables] = React.useState<any[]>([]);
+  const router = useRouter();
+  const searchRef = React.useRef<HTMLDivElement>(null);
 
-    }, [searchTerm]);
   useEffect(() => {
-    console.log("Probable Results:", probables);
-  }, [probables]);
+    const delay = setTimeout(() => {
+      if (searchTerm.length > 2) {
+        fetch(`${NEXT_PUBLIC_BACKEND_URL}/videos/search/${searchTerm}`)
+          .then((res) => res.json())
+          .then((data) => setProbables(data));
+      } else {
+        setProbables([]);
+      }
+    }, 500);
 
-     useEffect(() => { 
-        document.addEventListener('mousedown', (event) => {
-            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-                setFocused(false);
-            }
-        });
-        return () => document.removeEventListener('mousedown', (event) => {
-            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-                setFocused(false);
-            }
-        });
-    }, []);
+    return () => clearTimeout(delay);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setFocused(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
 
   return (
-    <div className='flex flex-col relative' ref={searchRef}>
-     <div className='flex h-8 border rounded-md border-gray-400'>
-    <input placeholder='Search' className='px-2 text-gray-600 placeholder-gray-400 ' type="search" onChange={(e)=> setSearchTerm(e.target.value)} value={searchTerm} name="searchVideos" id="searchVideos" 
-    onFocus={()=> setFocused(true)}/>
-     <span className='border-l rounded-r-md border-gray-400 bg-gray-100 flex '>
-         <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    className="w-6 h-6 text-gray-600 my-auto p-0.5"
-    onFocus={() => setFocused(true)}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M21 21l-4.35-4.35m1.1-5.4a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"
-    />
-  </svg>
-     </span>
-      </div>
-      <div className='flex flex-col rounded-md shadow-gray-600 shadow-sm bg-white mt-1 max-h-60 overflow-y-auto absolute left-0 right-0 z-50 mt-1 top-full'>
-        { (focused && probables.length> 0 && searchTerm.length>2) && probables.map((item) => (
-            <div key={item._id} className='flex text-gray-700 hover:bg-gray-200 px-2 py-1 rounded-md'>
-             <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    className="w-5 h-5  my-auto p-0.5"
-  > <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M21 21l-4.35-4.35m1.1-5.4a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"
-    />
-  </svg>
-            <span  onClick={() => {router.push(`/video/${item._id}`), setSearchTerm('')}}  className='px-2 py-1'>{item.title}</span>
-            </div>
-        ))}
-      </div>
-      </div>
-  )
-}
+    <div
+      ref={searchRef}
+      className="relative  max-w-full md:max-w-md lg:max-w-lg"
+    >
+      {/* Searchbar */}
+      <div className="flex items-center h-10 border rounded-md border-gray-300 bg-white w-full">
+        <input
+          placeholder="Search"
+          className="flex-1 h-full px-3 text-gray-700 placeholder-gray-400 focus:outline-none"
+          type="search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onFocus={() => setFocused(true)}
+        />
 
-export default Searchbar
+        <span className="border-l border-gray-300 bg-gray-50 px-2 flex items-center justify-center rounded-r-md">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-5 h-5 text-gray-600"
+            onClick={() => setFocused(true)}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-4.35-4.35m1.1-5.4a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"
+            />
+          </svg>
+        </span>
+      </div>
+
+      {/* Dropdown */}
+      {focused && probables.length > 0 && searchTerm.length > 2 && (
+        <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto z-50">
+          {probables.map((item) => (
+            <div
+              key={item._id}
+              className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+              onClick={() => {
+                router.push(`/home/video/${item._id}`);
+                setSearchTerm("");
+                setFocused(false);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-5 h-5 mr-2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-4.35-4.35m1.1-5.4a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"
+                />
+              </svg>
+              {item.title}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Searchbar;

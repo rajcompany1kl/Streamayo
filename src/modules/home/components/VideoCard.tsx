@@ -8,10 +8,21 @@ import { Clock } from 'lucide-react';
 
 const VideoCard = ({ video, user, isLive }: { video: Video; user?: any; isLive?: boolean }) => {
   const router = useRouter();
+  function timeAgo(dateString: string) {
+  const created = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - created.getTime();
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (days < 1) return "Today";
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
+}
+
 
   return (
     <div
-      onClick={!isLive ? () => router.push(`/video/${video._id}`) : ()=> router.push(`/watch-live/${video.userId}`)}
+      onClick={!isLive ? () => router.push(`/home/video/${video._id}`) : ()=> router.push(`/home/watch-live/${video.userId}`)}
 
       className={`group relative w-full flex flex-col space-y-3 cursor-pointer transition-all duration-300 hover:scale-[1.02]`}
     >
@@ -70,7 +81,8 @@ const VideoCard = ({ video, user, isLive }: { video: Video; user?: any; isLive?:
             {video.userName || 'Me'}
           </p>
           <span className="text-xs text-gray-500 mt-[2px]">
-            1.2M views • 2 weeks ago
+           {video.views} views • 
+            {timeAgo(video.createdAt)}
           </span>
         </div>
       </div>

@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import Hls from 'hls.js'
-import { Video } from '@/shared/models/video'
-import Image from 'next/image'
-import { useUser } from '@clerk/nextjs'
 import useRequest from '@/shared/hooks/useRequest'
+import { Video } from '@/shared/models/video'
+import { useUser } from '@clerk/nextjs'
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
 import CommentsSect from '../components/CommentsSect'
+import Reqsignin from '@/app/home/Reqsignin'
+
 
 
 const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
@@ -17,6 +18,7 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
   const [likesCount, setLikesCount] = useState(metadata.likesCount)
   const { user, isSignedIn } = useUser()
   const request = useRequest()
+  const [unauthorized, setUnauthorized] = useState<boolean>(true)
 
   const handleLikeVideo = async() => {
     if(isSignedIn && user) {
@@ -25,7 +27,7 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
       console.log(response)
       setLikesCount(response.likes ?? response.likesCount ?? response);
     } else {
-      alert("You need to login first")
+      setUnauthorized(false);
     } 
   } 
 
@@ -39,7 +41,7 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
       } )
       getSaveStatus()
     } else {
-      alert("You need to login first")
+      setUnauthorized(false);
     }
   } 
 
@@ -50,7 +52,7 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
        console.log(response)
       setLikesCount(response.likes ?? response.likesCount ?? response);
     } else {
-      alert("You need to login first")
+      setUnauthorized(false);
     }
   } 
 
@@ -93,11 +95,13 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
       setSubscribed(!isSubscibed)
      }
     else {
-      console.log("Sign in to subscribe or Creater doesnt exist")
+      if(!checking)
+      setUnauthorized(false);
     }
   }
 
   const play = () => {
+    request.home.viewed(metadata._id)
     console.log(metadata.url)
     const video = document.getElementById('player') as HTMLVideoElement;
       video.src = metadata.url;
@@ -109,6 +113,11 @@ const VideoPlayerTemplate: React.FC<{metadata: Video}> = ({ metadata }) => {
     getLikeStatus()
     getSaveStatus()
   },[metadata.url, user, isSignedIn])
+
+ if(!unauthorized){
+  return <Reqsignin/>
+ }
+
   return (
   <div className="w-full h-full flex flex-col lg:flex-row gap-6 pr-3 md:pr-0">
     {/* Video & Info */}

@@ -1,6 +1,5 @@
 'use client';
 
-import { DeleteIcon, MoreVertIcon } from '@/shared/components/ui/Icons';
 import { Video } from '@/shared/models/video';
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -18,7 +17,7 @@ const LikedVideoCard: React.FC<{ video: Video }> = ({ video }) => {
 
   return (
     <div
-      onClick={() => router.push(`/video/${video._id}`)}
+      onClick={() => router.push(`/home/video/${video._id}`)}
       className="group relative w-full flex flex-col md:flex-row gap-x-5 px-4 pt-2 my-2 rounded-2xl
                  bg-white
                  transition-all duration-300 cursor-pointer

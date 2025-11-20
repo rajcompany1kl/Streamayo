@@ -111,7 +111,7 @@ const formatDuration = `${mins}:${secs.toString().padStart(2, '0')}`;
         {videos?.length > 0 ? (
           <MyVideosList videos={videos} viewMode={viewMode} setViewMode={setViewMode} />
         ) : (
-          <div className="text-center py-20 bg-gray-900/50 border border-gray-800 rounded-2xl backdrop-blur-lg">
+          <div className="text-center py-20  border border-gray-800 rounded-2xl backdrop-blur-lg">
             <p className="text-sky-400 font-semibold text-lg">No videos yet</p>
             <p className="text-gray-500 text-sm mt-1">Upload your first video to see it here!</p>
           </div>

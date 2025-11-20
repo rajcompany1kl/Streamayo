@@ -7,13 +7,6 @@ import { Video } from '@/shared/models/video'
 import { Heart } from 'lucide-react';
 
 const LikedVideosTemplate = ({videos}: { videos: Video[]}) => {
-  const request = useRequest()
-  const { user } = useUser()
-  const [loading, setLoading] = useState(true);
- 
-
-  
- 
 
      if (videos.length === 0)
       return (
@@ -23,7 +16,7 @@ const LikedVideosTemplate = ({videos}: { videos: Video[]}) => {
           <p className="text-sm text-gray-500 mt-1">Start exploring and like the ones you love!</p>
         </div>
       );
-  
+      
 
   return (
     <main className="w-full min-h-screen text-gray-100">

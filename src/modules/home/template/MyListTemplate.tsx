@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useRequest from '@/shared/hooks/useRequest';
 import { useUser } from '@clerk/nextjs';
 import { Video } from '@/shared/models/video';
@@ -7,20 +7,29 @@ import LikedVideoCard from '../components/LikedVideoCard';
 import { Heart } from 'lucide-react';
 
 const MyListTemplate = () => {
+  const [loaderEl, setLoaderEl] = useState(null);
+  const loaderRef = useCallback((el) => {
+  setLoaderEl(el);
+}, []);
+
+  const PAGE_LIMIT = 4;
+  const [size, setSize] = useState(0);
+  const sizeRef = useRef(0);
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const request = useRequest();
   const { user } = useUser();
 
-  useEffect(() => {
-    const fetchSavedVideos = async () => {
+  const fetchLimitedSavedVideos = async (currentSize) => {
       if (!user?.id) return;
       try {
-        const response = await request.home.savedVideos(user.id);
-
-    
-
-        setVideos(response);
+        const response = await request.home.limitedSavedVideos(user.id,PAGE_LIMIT,currentSize);
+        console.log(currentSize)
+        setSize(prev => prev+PAGE_LIMIT)
+        setVideos(prev => {
+          const merged = [...prev, ...response];
+          return merged
+        });
       } catch (error) {
         console.error('Failed to fetch saved videos:', error);
       } finally {
@@ -28,8 +37,32 @@ const MyListTemplate = () => {
       }
     };
 
-    fetchSavedVideos();
+useEffect(() => {
+  sizeRef.current = size;
+}, [size]);
+
+
+   useEffect(() => {
+    console.log("Effect with [user] ran");
+    fetchLimitedSavedVideos(0);
   }, [user]);
+
+  useEffect(()=>{
+     if (!loaderEl) return;
+    console.log("banana chalu");
+     const observer = new IntersectionObserver((entries)=>{
+      if(entries[0].isIntersecting){
+        console.log('Loader is visible, fetching more videos...');
+        fetchLimitedSavedVideos(sizeRef.current);
+      }
+     }, 
+      { threshold: 0.1}
+    ); 
+    
+    if (loaderEl) observer.observe(loaderEl);
+    return () => observer.disconnect();
+
+  },[loaderEl])
 
    if (loading)
     return (
@@ -49,11 +82,11 @@ const MyListTemplate = () => {
     );
 
   return (
+    <div className='flex flex-col'>
     <main className="w-full min-h-screen text-gray-100">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-4 mt-2">
-         
-          <span className="text-sm text-gray-500">{videos.length} saved</span>
+          <span className="text-sm text-gray-500"> Saved Videos:</span>
         </div>
 
         {/* List View */}
@@ -66,6 +99,11 @@ const MyListTemplate = () => {
         </div>
       </div>
     </main>
+    <div ref={loaderRef} className='bg-black'>
+      <p>loading more videos...</p>
+    
+    </div>
+    </div>
   );
 };
 

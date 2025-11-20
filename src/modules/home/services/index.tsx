@@ -126,6 +126,15 @@ const HomeServices = () => {
         }
     }
 
+    async function viewed(videoId: string) {
+        try {
+            http.patch(`${NEXT_PUBLIC_BACKEND_URL}/videos/viewed/${videoId}`)
+          
+        } catch (error) {
+            
+        }
+    }
+
     async function saveVideo(userId: string, videoId: string, videoOwnerDetails: { videoOwnerId: string, videoOwnerName: string, videoOwnerUrl: string }) {
         try{
             const response = await http.post(`${NEXT_PUBLIC_BACKEND_URL}/videos/save/${videoId}/${userId}`,{videoOwnerDetails})
@@ -141,6 +150,20 @@ const HomeServices = () => {
         try{
             const response = await http.get(`${NEXT_PUBLIC_BACKEND_URL}/videos/mylist/${userId}`)
             if(response) {
+                return response.data
+            }
+        } catch(e) {
+            // Toasting here
+        }
+    }
+    
+
+        async function limitedSavedVideos(userId: string, PAGE_LIMIT: number, skip: number) {
+        try{
+            console.log("ayayaya")
+            const response = await http.get(`${NEXT_PUBLIC_BACKEND_URL}/videos/mylist/limited/${userId}`, { params: { pageLimit: PAGE_LIMIT, skip: skip } })
+            if(response) {
+                 console.log("ayayaya", response)
                 return response.data
             }
         } catch(e) {
@@ -248,7 +271,7 @@ const HomeServices = () => {
         }
     }
 
-    return { getUserDetails, getAllVideos, uploadVideo, getMyVideos, likeVideo, getLikeStatus, dislikeVideo, getLikedVideos, getSaveStatus, saveVideo, getComments, addComment, savedVideos, subscribe, getSubscribedVideos, getLiveVideos, endLive, getRoomMetadata, getUploadSignature, uploadToBackend, getLimitedVideos }
+    return { getUserDetails, getAllVideos, uploadVideo, getMyVideos, likeVideo, getLikeStatus, dislikeVideo, getLikedVideos, getSaveStatus, saveVideo, getComments, addComment, savedVideos, subscribe, getSubscribedVideos, getLiveVideos, endLive, getRoomMetadata, getUploadSignature, uploadToBackend, getLimitedVideos, limitedSavedVideos, viewed }
 }
 
   

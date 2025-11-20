@@ -6,8 +6,10 @@ import useRequest from '@/shared/hooks/useRequest';
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Send } from "lucide-react";
+import Reqsignin from "@/app/home/Reqsignin";
 
 const CommentsSect = () => {
+  const [unauthorized,setUnauthorized]= useState<boolean>(false);
   const params = useParams();
   const videoId = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const [inComment, setInComment] = useState('');
@@ -26,12 +28,18 @@ const CommentsSect = () => {
   }, [videoId]);
 
   async function handleAddComment() {
+    if(!user?.id) {setUnauthorized(true);
+      return;
+    };
     if (!inComment.trim() || !videoId || !user?.id) return;
     const response = await request.home.addComment(videoId, user.id, inComment);
     setComments((prev) => [...prev, { text: inComment, userName: user?.fullName, userImageUrl: user?.imageUrl }]);
     setInComment('');
   }
 
+  if(unauthorized){
+    return <Reqsignin/>
+  }
   return (
     <div className="w-full h-fit bg-white text-gray-900 rounded-2xl p-6  shadow-md flex flex-col space-y-6 overflow-y-auto max-h-[80vh] scrollbar-hide">
       {/* Comment Input */}
