@@ -108,7 +108,7 @@ const HomeTemplate = () => {
 
       </div>
       <div>
-        <div ref={loader} className="h-12 w-full text-black">Loading Videos...</div>
+        <div ref={loader} className="h-12 w-full text-gray-400">Loading Videos...</div>
       </div>
     </div>
   );

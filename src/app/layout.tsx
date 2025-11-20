@@ -7,8 +7,8 @@ import Sidebar from "@/shared/components/Sidebar";
 import Footnavbar from "@/shared/components/Footnavbar"; 
 
 export const metadata: Metadata = {
-  title: "Zentra",
-  description: "Created by Abbas Ali Dalal and Raj Bohara",
+  title: "StreaMeyo",
+  description: "Created by Raj Bohara",
 };
 
 const font = Roboto({
