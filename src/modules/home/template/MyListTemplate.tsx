@@ -99,7 +99,7 @@ useEffect(() => {
         </div>
       </div>
     </main>
-    <div ref={loaderRef} className='bg-black'>
+    <div ref={loaderRef} >
       <p>loading more videos...</p>
     
     </div>

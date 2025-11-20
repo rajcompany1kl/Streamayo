@@ -63,13 +63,13 @@ const Header = () => {
 
           <SignedOut>
             <SignInButton>
-              <span className="text-gray-700 hover:text-black cursor-pointer hidden sm:inline">
+              <span className="text-gray-700 hover:text-black cursor-pointer inline">
                 Login
               </span>
             </SignInButton>
 
             <SignUpButton>
-              <button className="hidden sm:inline bg-gray-900 text-white rounded-full px-4 py-1.5 text-sm hover:bg-black">
+              <button className="inline bg-gray-900 text-white rounded-full px-4 py-1.5 text-sm hover:bg-black">
                 Register
               </button>
             </SignUpButton>
@@ -78,7 +78,7 @@ const Header = () => {
           <SignedIn>
             {!hideGoLiveButton && (
               <button
-                className="hidden sm:flex text-gray-900 border border-gray-900 rounded-md px-3 py-1.5 text-sm hover:bg-gray-900 hover:text-white"
+                className="flex text-gray-900 border border-gray-900 rounded-md px-3 py-1.5 text-sm hover:bg-gray-900 hover:text-white"
                 onClick={() => router.push("/home/go-live")}
               >
                 Go Live
