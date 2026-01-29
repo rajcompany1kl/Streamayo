@@ -108,7 +108,7 @@ const HomeTemplate = () => {
 
       </div>
       <div>
-        <div ref={loader} className="h-12 w-full text-gray-400">Loading Videos...</div>
+        <div ref={loader} className="h-12 w-full text-gray-400">Loading Videos... Activity server might take 1-2 minutes on free deployement, plz refresh after that. </div>
       </div>
     </div>
   );
